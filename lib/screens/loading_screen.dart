@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-
 import 'package:geolocator_android/geolocator_android.dart';
+import 'package:clima/services/location.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -9,18 +9,22 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-  String? _currentAddress;
-  Position? _currentPosition;
+  double? lat;
+  double? lon;
+  Position? getLoc;
 
-  void getlocation() async {
-    LocationPermission permission = await Geolocator.requestPermission();
-    print(permission);
+  Future<bool> readLocation() async {
+    Location locationObject = Location();
+    getLoc = await locationObject.getlocation();
+    print('data: $getLoc');
+    return true;
+  }
 
-    _currentPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+  void initState() {
+    readLocation();
+    setState(() {});
 
-    print(_currentPosition);
-    print('end');
+    super.initState();
   }
 
   @override
@@ -30,16 +34,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('LAT: ${_currentPosition?.latitude ?? ""}'),
-            Text('LNG: ${_currentPosition?.longitude ?? ""}'),
-            Text('ADDRESS: ${_currentAddress ?? ""}'),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () {
-                getlocation();
-              },
-              child: const Text("Get Current Location"),
-            )
+            Text('LATD: ${getLoc?.latitude ?? "NA"}'),
+            Text('LNGD: ${getLoc?.longitude ?? "NA"}'),
           ],
         ),
       ),
