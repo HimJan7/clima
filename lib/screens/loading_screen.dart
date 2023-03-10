@@ -5,6 +5,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geolocator_android/geolocator_android.dart';
 import 'package:clima/services/location.dart';
 import 'package:clima/services/networking.dart';
+import 'package:clima/screens/location_screen.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 const String apiKey = '9a0961310414844f06c5fdb1449e94a7';
 
@@ -18,7 +20,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   double? lon;
   Position? getLoc;
 
-  Future<bool> readLocation() async {
+  Future<void> readLocation() async {
     Location locationObject = Location();
     getLoc = await locationObject.getLocation();
     NetworkHelper getCondition = NetworkHelper(
@@ -26,12 +28,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     var weatherData = await getCondition.getData();
 
-    setState(() {
-      lat = getLoc?.latitude;
-      lon = getLoc?.longitude;
-    });
-    //getData();
-    return true;
+    // ignore: use_build_context_synchronously
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return LocationScreen(
+        LocationWeather: weatherData,
+      );
+    }));
   }
 
   void initState() {
@@ -39,20 +41,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
     readLocation();
   }
 
-  void getData() async {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('LATD: ${lat ?? "NA"}'),
-            Text('LNGD: ${lon ?? "NA"}'),
-          ],
-        ),
-      ),
+          child: SpinKitDoubleBounce(
+        color: Colors.white,
+        size: 100.0,
+      )),
     );
   }
 }
