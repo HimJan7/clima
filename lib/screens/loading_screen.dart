@@ -24,7 +24,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     Location locationObject = Location();
     getLoc = await locationObject.getLocation();
     NetworkHelper getCondition = NetworkHelper(
-        'https://api.openweathermap.org/data/2.5/weather?lat=${getLoc?.latitude}&lon=${getLoc?.longitude}&appid=$apiKey');
+        'https://api.openweathermap.org/data/2.5/weather?lat=${getLoc?.latitude}&lon=${getLoc?.longitude}&appid=$apiKey&units=metric');
 
     var weatherData = await getCondition.getData();
 
